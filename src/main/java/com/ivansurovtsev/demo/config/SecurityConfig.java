@@ -16,17 +16,18 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable) // Отключаем CSRF
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/register").permitAll() // Разрешаем доступ всем
-                        .requestMatchers("/student/**").hasRole("STUDENT") // Только для студентов
-                        .requestMatchers("/teacher/**").hasRole("TEACHER") // Только для учителей
-                        .anyRequest().authenticated() // Все остальные запросы требуют аутентификации
+                        .requestMatchers("/auth/register").permitAll() // Доступ всем
+                        .requestMatchers("/student/**").hasAuthority("STUDENT") // Только студенты
+                        .requestMatchers("/teacher/**").hasAuthority("TEACHER") // Только преподаватели
+                        .requestMatchers("/admin/**").hasAuthority("ADMIN") // Только администраторы
+                        .anyRequest().authenticated() // Остальные запросы требуют аутентификации
                 )
-                .formLogin(form -> form // Включаем форму логина
-                        .defaultSuccessUrl("/", true) // Перенаправление после успешного входа
+                .formLogin(form -> form
+                        .defaultSuccessUrl("/", true)
                 )
-                .httpBasic(httpBasic -> {}); // Включаем базовую аутентификацию
+                .httpBasic(httpBasic -> {});
 
         return http.build();
     }

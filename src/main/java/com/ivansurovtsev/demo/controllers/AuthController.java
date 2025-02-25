@@ -2,6 +2,7 @@ package com.ivansurovtsev.demo.controllers;
 
 import com.ivansurovtsev.demo.services.CustomerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,10 +15,8 @@ public class AuthController {
     private final CustomerService customerService;
 
     @PostMapping("/register")
-    public String register(@RequestParam String username,
-                           @RequestParam String password,
-                           @RequestParam String role) {
-        customerService.registerCustomer(username, password, role);
-        return "Пользователь успешно зарегистрировался!";
+    public ResponseEntity <?> register(@RequestParam String username,
+                                   @RequestParam String password) {
+        return ResponseEntity.ok(customerService.registerCustomer(username, password));
     }
 }
